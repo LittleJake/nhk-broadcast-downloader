@@ -13,13 +13,9 @@ if sys.version_info.major < 3:
     sys.setdefaultencoding('utf8')
 
 dom = parseString(requests.get(RSS_URL).text)
-try:
-    with open("rss.xml", "r") as fp:
-        rss = parseString(fp.read())
-except:
-    rss = parseString(requests.get(RSS_URL).text)
-    for node in rss.getElementsByTagName('item'):
-        rss.getElementsByTagName('channel')[0].removeChild(node)
+rss = parseString(requests.get(RSS_URL).text)
+for node in rss.getElementsByTagName('item'):
+    rss.getElementsByTagName('channel')[0].removeChild(node)
 
 for node in dom.getElementsByTagName('item'):
     name = node.getElementsByTagName('title')[0].childNodes[0].data

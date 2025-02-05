@@ -4,10 +4,6 @@ DOWNLOAD_DIR = "download/"
 
 MOVE_DIR = ""
 
-# MOVE_COMMAND = "rclone moveto {} OneDrive:/share/NHK/"
-MOVE_COMMAND = ""
+POST_COMMAND = ""
 
-# COPY_COMMAND = "rclone copyto {} OneDrive:/share/NHK/{}"
-COPY_COMMAND = ""
-
-BASE_URL = ""
+RSS_BASE_URL = ""

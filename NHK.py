@@ -33,6 +33,7 @@ def remove_node_once(dom, tag_name):
 def handle_nhk():
     guid = set()
     dom = parseString(requests.get(RSS_URL).text)
+    first_download = False
 
     # load previous xml
     try:
@@ -41,6 +42,7 @@ def handle_nhk():
     except:
         rss = parseString(requests.get(RSS_URL).text)
         remove_node_once(rss, 'itunes:new-feed-url')
+        first_download = True
 
     # remove duplicate item
     for item in rss.getElementsByTagName('item'):
@@ -48,7 +50,7 @@ def handle_nhk():
 
     # proceed
     for item in dom.getElementsByTagName('item'):
-        if item.getElementsByTagName('guid')[0].childNodes[0].data in guid:
+        if not first_download and item.getElementsByTagName('guid')[0].childNodes[0].data in guid:
             continue
 
         date = item.getElementsByTagName('pubDate')[0].childNodes[0].data
@@ -57,20 +59,20 @@ def handle_nhk():
         try:
             date = datetime.strptime(date, '%a, %d %b %Y %H:%M:%S +0900')
             try:
-                os.makedirs("{}{}".format(DOWNLOAD_DIR, date.strftime('%Y年/%m月%d日/')))
+                os.makedirs("{}{}".format(DOWNLOAD_DIR, date.strftime('%Y/%m-%d/')))
             except:
                 pass
 
             try:
                 response = requests.get(url)
-                with open("{}{}{}.mp3".format(DOWNLOAD_DIR, date.strftime('%Y年/%m月%d日/'), filename), "wb") as f:
+                with open("{}{}{}.mp3".format(DOWNLOAD_DIR, date.strftime('%Y/%m-%d/'), filename), "wb") as f:
                     f.write(response.content)
-                    logging.info("%s 下载成功" % filename)
+                    logging.info("'%s' download success." % filename)
             except Exception:
-                logging.error("%s 下载失败" % filename)
+                logging.error("'%s' download failed." % filename)
 
             item.getElementsByTagName('enclosure')[0].\
-                setAttribute('url', BASE_URL + "{}{}.mp3".format(date.strftime('%Y年/%m月%d日/'), filename))
+                setAttribute('url', RSS_BASE_URL + "{}{}.mp3".format(date.strftime('%Y/%m-%d/'), filename))
             rss.getElementsByTagName('channel')[0].appendChild(item)
         except Exception as e:
             logging.error(e)
@@ -85,17 +87,9 @@ def handle_nhk():
 
 def additional_func():
     try:
-        if MOVE_DIR:
-            shutil.move("%s/*" % DOWNLOAD_DIR, MOVE_DIR)
-            logging.info("移动成功")
-        elif MOVE_COMMAND:
-            os.system(MOVE_COMMAND.format(DOWNLOAD_DIR))
-            logging.info("移动命令执行成功")
-
-        # rss
-        if COPY_COMMAND:
-            os.system(COPY_COMMAND.format("rss.xml", "rss.xml"))
-            logging.info("复制命令执行成功")
+        if POST_COMMAND:
+            os.system(POST_COMMAND)
+            logging.info("post_command executed.")
     except Exception as e:
         logging.error(e)
 

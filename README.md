@@ -27,17 +27,13 @@ Download NHK radio broadcast (podcast) for learning Japanese.
 
 ## Demo
 
-<del>存档网站：https://pan.littlejake.net/NHK/</del>
-
-<del>播客订阅RSS地址（自2021.11.19）：https://pan.littlejake.net/NHK/rss.xml</del>
-
-<del>推荐软件：AntennaPod（安卓）</del>
-
-<del>数据文件侵权即删。</del>
-
 Data no longer available due to the discontinuity of Microsoft E5 Develeoper Free Trial Progam subscription.
 
 由于 Microsoft E5 Develeoper 免费试用版订购终止，数据不再提供。
+
+2025.02.05更新下载页面：
+
+https://github.com/LittleJake/nhk-broadcast-downloader/releases
 
 ## Dependencies
 
